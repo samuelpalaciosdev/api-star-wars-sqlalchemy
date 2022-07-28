@@ -71,7 +71,7 @@ class Planet(db.Model):
     __tablename__ = 'planets'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True)
-    picture = db.Column(db.String(250), default="https://static.wikia.nocookie.net/starwars/images/9/98/Taris_TOR.png/revision/latest?cb=20190421041041")
+    image = db.Column(db.String(250), default="https://static.wikia.nocookie.net/starwars/images/9/98/Taris_TOR.png/revision/latest?cb=20190421041041")
     rotation_period = db.Column(db.Integer)
     orbital_period = db.Column(db.Integer)
     diameter = db.Column(db.Integer)
@@ -86,7 +86,7 @@ class Planet(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'picture': self.picture,
+            'image': self.image,
             'rotation_period': self.rotation_period,
             'orbital_period': self.orbital_period,
             'diameter': self.diameter,
@@ -97,4 +97,58 @@ class Planet(db.Model):
             'population': self.population
         }
 
-    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+class Vehicle(db.Model):
+    __tablename__ = 'vehicles'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True)
+    image = db.Column(db.String(250), default="https://cdn.drivingline.com/media/12940/dl-sw_10-06.jpg")
+    model = db.Column(db.String(100))
+    manufacturer = db.Column(db.String(100))
+    cost_in_credits = db.Column(db.Integer)
+    length = db.Column(db.Float)
+    max_atmospheric_speed = db.Column(db.Integer)
+    crew = db.Column(db.Integer)
+    passengers = db.Column(db.Integer)
+    cargo_capacity = db.Column(db.Integer)
+    consumables = db.Column(db.String(100))
+    vehicle_class = db.Column(db.String(100))
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'image': self.image,
+            'name': self.name,
+            'model': self.model,
+            'manufacturer': self.manufacturer,
+            'cost_in_credits': self.cost_in_credits,
+            'length': self.length,
+            'max_atmospheric_speed': self.max_atmospheric_speed,
+            'crew': self.crew,
+            'passengers': self.passenger,
+            'cargo_capacity': self.cargo_capacity,
+            'consumables': self.consumables,
+            'vehicle_class': self.vehicle_class
+        }
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
