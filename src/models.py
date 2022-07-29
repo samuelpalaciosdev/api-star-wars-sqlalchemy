@@ -7,6 +7,16 @@ favorite_characters = db.Table('favorite_characters',
     db.Column('character_id', db.Integer, db.ForeignKey('characters.id'), primary_key=True)
 )
 
+favorite_planets = db.Table('favorite_planets',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key = True),
+    db.Column('planet_id', db.Integer, db.ForeignKey('planets.id'), primary_key=True)
+)
+
+favorite_vehicles = db.Table('favorite_vehicles',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key = True),
+    db.Column('vehicle_id', db.Integer, db.ForeignKey('vehicles.id'), primary_key=True)
+)
+
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -15,6 +25,8 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     fav_characters = db.relationship('Character', secondary='favorite_characters', backref='liked_by_user')
+    fav_planets = db.relationship('Planet', secondary='favorite_planets', backref='liked_by_user')
+    fav_vehicles = db.relationship('Vehicle', secondary='favorite_vehicles', backref='liked_by_user')
     is_active = db.Column(db.Boolean(), nullable=False) # check if user is connected
 
     def serialize(self):
