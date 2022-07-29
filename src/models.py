@@ -2,21 +2,11 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 db = SQLAlchemy() 
 
-
 favorite_characters = db.Table('favorite_characters',
-    db.Column('user_id', db.Integer, db.ForeignKey('user_id')),
-    db.Column('character_id', db.Integer, db.ForeignKey('character_id'))
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key= True),
+    db.Column('character_id', db.Integer, db.ForeignKey('characters.id'), primary_key=True)
 )
 
-favorite_planets = db.Table('favorite_planets',
-    db.Column('user_id', db.Integer, db.ForeignKey('user_id')),
-    db.Column('planet_id', db.Integer, db.ForeignKey('planet_id'))
-)
-
-favorite_vehicles = db.Table('favorite_vehicles',
-    db.Column('user_id', db.Integer, db.ForeignKey('user_id')),
-    db.Column('vehicle_id', db.Integer, db.ForeignKey('vehicle_id'))
-)
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -24,9 +14,7 @@ class User(db.Model):
     password = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
-    favorite_characters = db.relationship('Character', secondary=favorite_characters, backref='favorite_characters')
-    favorite_planets = db.relationship('Planet', secondary=favorite_planets, backref='favorite_planets')
-    favorite_vehicles = db.relationship('Vehicle', secondary=favorite_vehicles, backref='favorite_vehicles')
+    fav_characters = db.relationship('Character', secondary='favorite_characters', backref='liked_by_user')
     is_active = db.Column(db.Boolean(), nullable=False) # check if user is connected
 
     def serialize(self):
@@ -62,6 +50,7 @@ class Character(db.Model):
     eye_color = db.Column(db.String(50))
     birth_year = db.Column(db.Integer)
     gender = db.Column(db.String(50))
+    # liked_by_user = db.relationship('User', secondary='favorite_characters')
     # homeworld = db.Column(db.Integer, ForeignKey('planets.id'), default='unknown')
 
     def serialize(self):
