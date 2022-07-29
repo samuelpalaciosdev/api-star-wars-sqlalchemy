@@ -2,18 +2,40 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 db = SQLAlchemy() 
 
+
+favorite_characters = db.Table('favorite_characters',
+    db.Column('user_id', db.Integer, db.ForeignKey('user_id')),
+    db.Column('character_id', db.Integer, db.ForeignKey('character_id'))
+)
+
+favorite_planets = db.Table('favorite_planets',
+    db.Column('user_id', db.Integer, db.ForeignKey('user_id')),
+    db.Column('planet_id', db.Integer, db.ForeignKey('planet_id'))
+)
+
+favorite_vehicles = db.Table('favorite_vehicles',
+    db.Column('user_id', db.Integer, db.ForeignKey('user_id')),
+    db.Column('vehicle_id', db.Integer, db.ForeignKey('vehicle_id'))
+)
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False) 
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    last_name = db.Column(db.String(100), nullable=False)
+    favorite_characters = db.relationship('Character', secondary=favorite_characters, backref='favorite_characters')
+    favorite_planets = db.relationship('Planet', secondary=favorite_planets, backref='favorite_planets')
+    favorite_vehicles = db.relationship('Vehicle', secondary=favorite_vehicles, backref='favorite_vehicles')
     is_active = db.Column(db.Boolean(), nullable=False) # check if user is connected
 
     def serialize(self):
         return{
             'id': self.id,
-            'username': self.username,
-            'is_active': self.is_active
+            'email': self.email,
+            'is_active': self.is_active,
+            'name': self.name,
+            'last_name': self.last_name
             # do not serialize password for security purposes
         }
 
@@ -151,4 +173,3 @@ class Vehicle(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
-
