@@ -112,7 +112,7 @@ class Planet(db.Model):
     terrain = db.Column(db.String(100), default="unknown")
     surface_water = db.Column(db.Integer)
     population = db.Column(db.Integer)
-    characters_born_here = db.relationship('Character', backref='planet')
+    # characters_born_here = db.relationship('Character', backref='planet')
 
     def serialize(self): 
         return {
