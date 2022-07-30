@@ -110,7 +110,7 @@ class Planet(db.Model):
     climate = db.Column(db.String(100), default='unknown')
     gravity = db.Column(db.String(50), default='unknown')
     terrain = db.Column(db.String(100), default='unknown')
-    surface_water = db.Column(db.Integer)
+    surface_water = db.Column(db.String(100))
     population = db.Column(db.Integer)
     # characters_born_here = db.relationship('Character', backref='planet')
 
@@ -149,7 +149,7 @@ class Vehicle(db.Model):
     manufacturer = db.Column(db.String(100))
     cost_in_credits = db.Column(db.Integer)
     length = db.Column(db.Float)
-    max_atmospheric_speed = db.Column(db.Integer)
+    max_atmosphering_speed = db.Column(db.Integer)
     crew = db.Column(db.Integer)
     passengers = db.Column(db.Integer)
     cargo_capacity = db.Column(db.Integer)
@@ -165,7 +165,7 @@ class Vehicle(db.Model):
             'manufacturer': self.manufacturer,
             'cost_in_credits': self.cost_in_credits,
             'length': self.length,
-            'max_atmospheric_speed': self.max_atmospheric_speed,
+            'max_atmosphering_speed': self.max_atmosphering_speed,
             'crew': self.crew,
             'passengers': self.passengers,
             'cargo_capacity': self.cargo_capacity,

@@ -1,3 +1,4 @@
+from re import S
 from flask import Flask, jsonify, request
 from flask_migrate import Migrate
 from models import db, User, Character, Planet, Vehicle, favorite_characters, favorite_planets, favorite_vehicles
@@ -19,9 +20,10 @@ def main():
 
 #### Characters Route ####
 
-# Returns list of all the characters in the Database
+# Returns list of all the characters in the Database and Create Character
 @app.route('/characters', methods=['GET', 'POST'])
 def list_and_create_character():
+
     if request.method == 'GET':
         characters = Character.query.all()
         characters = list(map(lambda character: character.serialize(), characters))
@@ -47,9 +49,6 @@ def list_and_create_character():
         return jsonify(character.serialize()), 201
 
 
-
-
-
 # Returns info about a character by id
 @app.route('/characters/<int:character_id>', methods=['GET'])
 def get_character_by_id(character_id):
@@ -59,12 +58,32 @@ def get_character_by_id(character_id):
 
 #### Planets Route ####
 
-# Returns list of all the planets in the Database
-@app.route('/planets', methods=['GET'])
-def get_planets():
-    planets = Planet.query.all()
-    planets = list(map(lambda planet: planet.serialize(), planets))
-    return jsonify(planets), 200
+# Returns list of all the planets in the Database and Create Planet
+@app.route('/planets', methods=['GET', 'POST'])
+def list_and_create_planets():
+
+    if request.method == 'GET':
+        planets = Planet.query.all()
+        planets = list(map(lambda planet: planet.serialize(), planets))
+        return jsonify(planets), 200    
+
+    if request.method == 'POST':
+        data = request.get_json()
+        planet = Planet()  
+        planet.name = data['name']
+        planet.image = data['image']
+        planet.rotation_period = data['rotation_period']
+        planet.orbital_period = data['orbital_period']
+        planet.diameter = data['diameter']
+        planet.climate = data['climate']
+        planet.gravity = data['gravity']
+        planet.terrain = data['terrain']
+        planet.surface_water = data['surface_water']
+        planet.population = data['population']
+        planet.save()
+
+        return jsonify(planet.serialize()), 201
+
 
 # Returns info about a planet by id
 @app.route('/planets/<int:planet_id>', methods=['GET'])
@@ -74,12 +93,33 @@ def get_planet_by_id(planet_id):
 
 #### Vehicles Route ####
 
-# Returns list of all the vehicles in the Database
-@app.route('/vehicles', methods=['GET'])
-def get_vehicles():
-    vehicles = Vehicle.query.all()
-    vehicles = list(map(lambda vehicle: vehicle.serialize(), vehicles))
-    return jsonify(vehicles), 200
+# Returns list of all the vehicles in the Database and Create Vehicle
+@app.route('/vehicles', methods=['GET', 'POST'])
+def list_and_create_vehicles():
+    if request.method == 'GET':
+        vehicles = Vehicle.query.all()
+        vehicles = list(map(lambda vehicle: vehicle.serialize(), vehicles))
+        return jsonify(vehicles), 200
+
+    if request.method == 'POST':
+        data = request.get_json()
+        vehicle = Vehicle()
+        vehicle.name = data['name']
+        vehicle.image = data['image']
+        vehicle.model = data['model']
+        vehicle.manufacturer = data['manufacturer']
+        vehicle.cost_in_credits = data['cost_in_credits']
+        vehicle.length = data['length']
+        vehicle.max_atmosphering_speed = data['max_atmosphering_speed']
+        vehicle.crew = data['crew']
+        vehicle.passengers = data['passengers']
+        vehicle.cargo_capacity = data['cargo_capacity']
+        vehicle.consumables = data['consumables']
+        vehicle.vehicle_class = data['vehicle_class']
+        vehicle.save()
+
+        return jsonify(vehicle.serialize()), 201
+
 
 # Returns info about a vehicle by id
 @app.route('/vehicles/<int:vehicle_id>', methods=['GET'])
