@@ -1,4 +1,3 @@
-from crypt import methods
 from flask import Flask, jsonify, request
 from flask_migrate import Migrate
 from models import db, User, Character, Planet, Vehicle, favorite_characters, favorite_planets, favorite_vehicles
@@ -21,14 +20,38 @@ def main():
 #### Characters Route ####
 
 # Returns list of all the characters in the Database
-@app.route('/api/characters', methods=['GET'])
-def get_characters():
-    characters = Character.query.all()
-    characters = list(map(lambda character: character.serialize(), characters))
-    return jsonify(characters), 200
+@app.route('/characters', methods=['GET', 'POST'])
+def list_and_create_character():
+    if request.method == 'GET':
+        characters = Character.query.all()
+        characters = list(map(lambda character: character.serialize(), characters))
+        return jsonify(characters), 200
+    
+    if request.method == 'POST':
+
+        data = request.get_json()
+
+        character = Character()
+        character.name = data['name']
+        character.image = data['image']
+        character.height = data['height']
+        character.mass = data['mass']
+        character.hair_color = data['hair_color']
+        character.skin_color = data['skin_color']
+        character.eye_color = data['eye_color']
+        character.birth_year = data['birth_year']
+        character.gender = data['gender']
+
+        character.save()
+
+        return jsonify(character.serialize()), 201
+
+
+
+
 
 # Returns info about a character by id
-@app.route('/api/characters/<int:character_id>', methods=['GET'])
+@app.route('/characters/<int:character_id>', methods=['GET'])
 def get_character_by_id(character_id):
     character = Character.query.get(character_id)
     return jsonify(character.serialize()), 200
@@ -37,14 +60,14 @@ def get_character_by_id(character_id):
 #### Planets Route ####
 
 # Returns list of all the planets in the Database
-@app.route('/api/planets', methods=['GET'])
+@app.route('/planets', methods=['GET'])
 def get_planets():
     planets = Planet.query.all()
     planets = list(map(lambda planet: planet.serialize(), planets))
     return jsonify(planets), 200
 
 # Returns info about a planet by id
-@app.route('/api/planets/<int:planet_id>', methods=['GET'])
+@app.route('/planets/<int:planet_id>', methods=['GET'])
 def get_planet_by_id(planet_id):
     planet = Planet.query.get(planet_id)
     return jsonify(planet.serialize()), 200
@@ -52,14 +75,14 @@ def get_planet_by_id(planet_id):
 #### Vehicles Route ####
 
 # Returns list of all the vehicles in the Database
-@app.route('/api/vehicles', methods=['GET'])
+@app.route('/vehicles', methods=['GET'])
 def get_vehicles():
     vehicles = Vehicle.query.all()
     vehicles = list(map(lambda vehicle: vehicle.serialize(), vehicles))
     return jsonify(vehicles), 200
 
 # Returns info about a vehicle by id
-@app.route('/api/vehicles/<int:vehicle_id>', methods=['GET'])
+@app.route('/vehicles/<int:vehicle_id>', methods=['GET'])
 def get_vehicle_by_id(vehicle_id):
     vehicle = Vehicle.query.get(vehicle_id)
     return jsonify(vehicle.serialize()), 200
@@ -74,7 +97,10 @@ def get_users():
     return jsonify(users), 200
 
 
+######################## USER FAVORITES HERE
+
 
 #### code inside this lines ####
 if __name__ == '__main__':
     app.run()
+

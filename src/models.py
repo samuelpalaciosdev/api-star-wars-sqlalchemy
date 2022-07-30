@@ -63,14 +63,14 @@ class Character(db.Model):
     __tablename__ = 'characters'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
-    image = db.Column(db.String(250), default="https://www.prensalibre.com/wp-content/uploads/2019/11/luke-skywalker-644x362.jpg?quality=52")
+    image = db.Column(db.String(250), default='https://www.prensalibre.com/wp-content/uploads/2019/11/luke-skywalker-644x362.jpg?quality=52')
     height = db.Column(db.Integer)
     mass = db.Column(db.Integer)
-    hair_color = db.Column(db.String(50))
+    hair_color = db.Column(db.String(50), default='n/a')
     skin_color = db.Column(db.String(50))
     eye_color = db.Column(db.String(50))
     birth_year = db.Column(db.Integer)
-    gender = db.Column(db.String(50))
+    gender = db.Column(db.String(50), default='n/a')
     # liked_by_user = db.relationship('User', secondary='favorite_characters')
     # homeworld = db.Column(db.Integer, ForeignKey('planets.id'), default='unknown')
 
@@ -103,13 +103,13 @@ class Planet(db.Model):
     __tablename__ = 'planets'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True)
-    image = db.Column(db.String(250), default="https://static.wikia.nocookie.net/starwars/images/9/98/Taris_TOR.png/revision/latest?cb=20190421041041")
+    image = db.Column(db.String(250), default='https://static.wikia.nocookie.net/starwars/images/9/98/Taris_TOR.png/revision/latest?cb=20190421041041')
     rotation_period = db.Column(db.Integer)
     orbital_period = db.Column(db.Integer)
     diameter = db.Column(db.Integer)
-    climate = db.Column(db.String(100), default="unknown")
-    gravity = db.Column(db.String(50), default="unknown")
-    terrain = db.Column(db.String(100), default="unknown")
+    climate = db.Column(db.String(100), default='unknown')
+    gravity = db.Column(db.String(50), default='unknown')
+    terrain = db.Column(db.String(100), default='unknown')
     surface_water = db.Column(db.Integer)
     population = db.Column(db.Integer)
     # characters_born_here = db.relationship('Character', backref='planet')
@@ -144,7 +144,7 @@ class Vehicle(db.Model):
     __tablename__ = 'vehicles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True)
-    image = db.Column(db.String(250), default="https://cdn.drivingline.com/media/12940/dl-sw_10-06.jpg")
+    image = db.Column(db.String(250), default='https://cdn.drivingline.com/media/12940/dl-sw_10-06.jpg')
     model = db.Column(db.String(100))
     manufacturer = db.Column(db.String(100))
     cost_in_credits = db.Column(db.Integer)
@@ -167,7 +167,7 @@ class Vehicle(db.Model):
             'length': self.length,
             'max_atmospheric_speed': self.max_atmospheric_speed,
             'crew': self.crew,
-            'passengers': self.passenger,
+            'passengers': self.passengers,
             'cargo_capacity': self.cargo_capacity,
             'consumables': self.consumables,
             'vehicle_class': self.vehicle_class
