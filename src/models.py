@@ -38,6 +38,15 @@ class User(db.Model):
             'last_name': self.last_name
             # do not serialize password for security purposes
         }
+    
+    def get_characters(self):
+        return list(map(lambda character: character.serialize(), self.fav_characters))
+
+    def get_planets(self):
+        return list(map(lambda planet: planet.serialize(), self.fav_planets))
+
+    def get_vehicles(self):
+        return list(map(lambda vehicle: vehicle.serialize(), self.fav_vehicles))
 
     def save(self):
         db.session.add(self)
