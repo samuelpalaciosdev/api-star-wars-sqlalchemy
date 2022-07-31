@@ -136,8 +136,8 @@ def get_users():
     users = list(map(lambda user: user.serialize(), users))
     return jsonify(users), 200
 
-######################## USER FAVORITES HERE
 
+######################## USER FAVORITES HERE
 
 # Returns user favorites list
 @app.route('/users/<int:user_id>/favorites/', methods=['GET'])
@@ -152,15 +152,16 @@ def get_user_favorites(user_id):
     return jsonify(message), 200
 
 # Add or Delete Favorite Character
-@app.route('/users/<int:id>/favorites/characters/<int:character_id>', methods=['POST', 'DELETE'])
-def add_or_delete_fav_character(id,character_id):
+@app.route('/users/<int:user_id>/favorites/characters/<int:character_id>', methods=['POST', 'DELETE'])
+def add_or_delete_fav_character(user_id,character_id):
     # Add favorite character
     if request.method == 'POST':
-        user = User.query.get(id)
+        # Get the user based on the param user_id of the route
+        user = User.query.get(user_id)
         username = request.json.get('username')
         character_id = Character.query.get(character_id)
-        
-        # if the id passed as a parameter to the route is not in the fav_characters list of the user, then add it
+
+        # if the character_id passed as a param to the route is not in the fav_characters list of the user, then add it
         if not character_id in user.fav_characters:
             user.fav_characters.append(character_id)
 
@@ -172,9 +173,9 @@ def add_or_delete_fav_character(id,character_id):
         user.update()
         return jsonify(user.serialize()), 201
         
-    # Delete favorite character based on the character_id param passed to the url
+    # Delete favorite character based on the character_id param passed to the route
     if request.method == 'DELETE':
-        user = User.query.get(id)
+        user = User.query.get(user_id)
         username = request.json.get('username')
         character_id = Character.query.get(character_id)
 
@@ -188,14 +189,14 @@ def add_or_delete_fav_character(id,character_id):
 def add_or_delete_fav_planet(user_id,planet_id):
     # Add favorite Planet
     if request.method == 'POST':
+        # Get the user based on the param user_id of the route
         user = User.query.get(user_id)
         username = request.json.get('username')
-        favorite_planet = request.json.get('favorite_planet')
+        planet_id = Planet.query.get(planet_id)
 
-        for planet in favorite_planet:
-            new_planet = Planet.query.get(planet)
-            if not new_planet in user.fav_planets:
-                user.fav_planets.append(new_planet)
+        # if the planet_id passed as a param to the route is not in the fav_planets list of the user, then add it
+        if not planet_id in user.fav_planets:
+            user.fav_planets.append(planet_id)
 
         user.update()
         return jsonify(user.serialize()), 201
@@ -204,12 +205,38 @@ def add_or_delete_fav_planet(user_id,planet_id):
     if request.method == 'DELETE':
         user = User.query.get(user_id)
         username = request.json.get('username')
-        planets_update = request.json.get('planets_update')
+        planet_id = Planet.query.get(planet_id)
 
-        if planets_update:
-            for planet in user.fav_planets:
-                if not str(planet.id) in planets_update:
-                    user.fav_planets.remove(planet)
+        user.fav_planets.remove(planet_id )
+
+        user.update()
+        return jsonify(user.serialize()), 200
+
+# Add or Delete Favorite Vehicle
+@app.route('/users/<int:user_id>/favorites/vehicles/<int:vehicle_id>', methods=['POST', 'DELETE'])
+def add_or_delete_fav_vehicle(user_id,vehicle_id):
+    # Add favorite Vehicle
+    if request.method == 'POST':
+        # Get the user based on the param user_id of the route
+        user = User.query.get(user_id)
+        username = request.json.get('username')
+        vehicle_id = Vehicle.query.get(vehicle_id)
+
+        # if the vehicle_id passed as a param to the route is not in the fav_vehicles list of the user, then add it
+        if not vehicle_id in user.fav_vehicles:
+            user.fav_vehicles.append(vehicle_id)
+
+        user.update()
+        return jsonify(user.serialize()), 201
+        
+    # Delete favorite Vehicle
+    if request.method == 'DELETE':
+        user = User.query.get(user_id)
+        username = request.json.get('username')
+        vehicle_id = Vehicle.query.get(vehicle_id)
+
+        user.fav_vehicles.remove(vehicle_id )
+
         user.update()
         return jsonify(user.serialize()), 200
 
