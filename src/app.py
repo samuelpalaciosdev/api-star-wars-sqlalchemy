@@ -136,6 +136,93 @@ def get_users():
     users = list(map(lambda user: user.serialize(), users))
     return jsonify(users), 200
 
+# Returns user favorites list
+@app.route('/users/<int:user_id>/favorites/', methods=['GET'])
+def get_user_favorites(user_id):
+    user = User.query.get(user_id)
+    message = {
+        "User": user.name,
+        "Favorite Characters": list(map(lambda character: character.serialize(), user.fav_characters)),
+        "Favorite Planets": list(map(lambda planet: planet.serialize(), user.fav_planets)),
+        "Favorite Vehicles": list(map(lambda vehicle: vehicle.serialize(), user.fav_vehicles))
+    }
+    return jsonify(message), 200
+
+@app.route('/users/<int:user_id>/favorites/characters/<int:character_id>', methods=['POST', 'DELETE'])
+def add_or_delete_fav_character(user_id,character_id):
+    # Add character
+    if request.method == 'POST':
+        user = User.query.get(user_id)
+        username = request.json.get('username')
+        favorite_character = request.json.get('favorite_character')
+
+        for character in favorite_character:
+            new_character = Character.query.get(character)
+            if not new_character in user.fav_characters:
+                user.fav_characters.append(new_character)
+        user.update()
+        return jsonify(user.serialize()), 201
+        
+
+
+    if request.method == 'DELETE':
+        user = User.query.get(user_id)
+        username = request.json.get('username')
+        favorite_character = request.json.get('favorite_character')
+
+        if favorite_character:
+            for character in user.fav_characters:
+                if not character.id in favorite_character:
+                    user.fav_characters.remove(character)
+        user.update()
+        return jsonify(user.serialize()), 200
+        # if favorite_character:
+        #     for character in user.fav_characters:
+        #         user.fav_characters.append()
+
+
+# def add_or_delete_fav_character(user_id,character_id):
+#     # Add character
+#     if request.method == 'POST':
+#         fav = favorite_characters
+#         user = User.query.get(user_id)
+#         fav_character_id = character_id
+#         user.fav_characters.append(Character.query.get(fav_character_id))
+#         fav.save()
+
+#         # fav = favorite_characters
+#         # user_id = fav.user_id
+#         # user = User.query.get(user_id)
+#         # fav_character_id = character_id
+#         # fav_user_id = user.id 
+#         # fav.save()
+#         return jsonify('Added correctly!')
+    
+#     if request.method == 'DELETE':
+#         user_id = fav.user_id
+#         user = User.query.get(user_id)
+#         fav_character_id = character_id
+
+#         favorites = favorite_characters.query.filter_by(user_id = user.id, character_id = character_id).first()
+#         favorites.delete()
+
+#         return jsonify('Favorite deleted')
+    
+
+
+# @app.route('/users/<int:user_id>/favorites/characters/<int:character_id>', methods=['POST', 'DELETE'])
+# def add_or_delete_fav_character(user_id, character_id):
+#     # Add character
+#     if request.method == 'POST':
+#         user = User.query.get(user_id)
+#         username = user.name
+#         fav = favorite_characters()
+
+#         fav.user_id = user.id
+#         fav.character_id = character_id
+
+
+        
 
 ######################## USER FAVORITES HERE
 
