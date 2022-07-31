@@ -35,7 +35,8 @@ class User(db.Model):
             'email': self.email,
             'is_active': self.is_active,
             'name': self.name,
-            'last_name': self.last_name
+            'last_name': self.last_name,
+            'is_active': self.is_active
             # do not serialize password for security purposes
         }
     
