@@ -165,11 +165,6 @@ def add_or_delete_fav_character(user_id,character_id):
         if not character_id in user.fav_characters:
             user.fav_characters.append(character_id)
 
-        # for character in favorite_character:
-        #     new_character = Character.query.get(character)
-        #     if not new_character in user.fav_characters:
-        #         user.fav_characters.append(new_character)
-
         user.update()
         return jsonify(user.serialize()), 201
         
